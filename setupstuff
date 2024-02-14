@@ -1,0 +1,75 @@
+sudo apt update -y && sudo apt upgrade -y
+sudo do-release-upgrade -d
+
+
+wget -O - -nv --ciphers DEFAULT@SECLEVEL=1 https://www.wall2.ilabt.iminds.be/enable-nat.sh | sudo bash
+git clone https://gitlab.ilabt.imec.be/togoetha/warrencni
+sudo chmod u+x warrencni/setup_worker.sh
+sudo warrencni/setup_worker.sh
+
+cd warrencni
+cp node
+
+
+T1 tracing (2 options)
+sudo cat /sys/kernel/debug/tracing/trace_pipe
+sudo bpftool prog tracelog
+
+T2 warren node 1
+sudo ./warren
+
+T3 target listen
+sudo tcpdump -vvv udp port 31337
+sudo tshark -x -i enp1s0f0 -f "udp port 31337"
+
+T4 ping
+sudo ip netns exec default-node0_svc0 ping fd53:7769:726c:d6bb:f5ac:16e2:3dbc:20
+
+T5 optional source listen
+sudo tcpdump udp port 31337
+
+check xdp progs
+sudo xdpdump -D
+
+
+sudo ctr tasks kill default_node0_svc0_node0_svc0
+sudo ctr container rm default_node0_svc0_node0_svc0
+sudo ctr image rm docker.io/togoetha/todoservice:latest
+sudo ctr image rm docker.io/togoetha/gorestapi:latest
+
+
+sudo ctr tasks kill default_node1_svc0_node1_svc0 
+sudo ctr container rm default_node1_svc0_node1_svc0 
+sudo ctr image rm docker.io/togoetha/todoservice:latest
+
+PUT MTU AT 1420 AND TURN TSO OFF!
+sudo ip netns exec default-node0_svc0 ifconfig eth1 mtu 1420 up
+sudo ip netns exec default-node0_svc0 ethtool -K eth1 tx off sg off tso off
+
+
+sudo ip netns exec default-node0_svc0 iperf3 -s -B fd53:7769:726c:ae01:49a3:3ba8:9725:20 -p 5202
+
+top -d 1 -n 60 -b -p 60892,`pgrep iperf3 | paste -sd,`
+top -d 1 -n 60 -b -p `pgrep warren | paste -sd,`
+sudo ip netns exec default-node0_svc0 ping -c 60 fd53:7769:726c:d29c:fc6e:331:acba:20
+sudo ip netns exec default-node0_svc0 iperf3 -c fd53:7769:726c:ae01:49a3:3ba8:9725:20 -t 65 -b 1Gbps -p 5202 -l 1400 -u
+
+ENABLE IPV6 ROUTING! see how to script this
+sudo sysctl -w net.ipv6.conf.all.forwarding=1
+
+sudo sysctl -w kernel.bpf_stats_enabled=1
+sudo sysctl -w kernel.bpf_stats_enabled=0
+sudo bpftool prog show
+
+sudo bpftool prog show | grep xdp_prog | awk '{print $9}' | paste -sd,
+
+#! /bin/sh
+
+while true; do sudo bpftool prog show | grep xdp_prog | awk '{print $9}' | paste -sd,; sleep 1;
+done
+
+
+wg genkey > privateKey
+wg pubkey < privateKey > publicKey
+cat privateKey
+cat publicKey

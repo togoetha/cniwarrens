@@ -1,0 +1,20 @@
+{
+    "metadata": {
+        "name": "node1_svc0",
+        "namespace": "default",
+        "creationTimestamp": null,
+        "labels": {
+
+        }
+    },
+    "spec": {
+        "containers": [
+            {
+                "name": "node1_svc0",
+                "image": "togoetha/todoservice",
+                "imagePullPolicy": "IfNotPresent"
+            }
+        ]
+    },
+    "status": {}
+}

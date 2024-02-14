@@ -1,0 +1,16 @@
+{
+    "NodeName":"node1",
+    "RemoteNodes":{
+        "fd53:7769:726c:25de:3944:6397:4f57:1/112": {
+            "PublicIPv6": "2001:6a8:1d80:2021:225:90ff:fe1d:23c6",
+            "Port": 31337,
+            "PublicMac": [0,37,144,29,35,198]
+        }
+    },
+    "CNIPrefix": "fd53:7769:726c:d6bb:f5ac:16e2:3dbc",
+    "Debug": true,
+    "NumServices":1,
+    "TunnelPort": 31337,
+    "TunDev": "fl0",
+    "UseXDP": true
+}

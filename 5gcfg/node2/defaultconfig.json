@@ -1,0 +1,32 @@
+{
+    "NodeName":"node2",
+    "RemoteNodes":{
+        "fd53:7769:726c:c9f5:e913:aa9f:1265:1/112": {
+            "PublicIPv6":"2001:6a8:1d80:2021:230:48ff:fef0:2582",
+            "Port": 31337,
+            "PublicMac": [0,48,72,240,37,130]
+        },
+        "fd53:7769:726c:ae01:49a3:3ba8:9725:1/112": {
+            "PublicIPv6":"2001:6a8:1d80:2021:230:48ff:fecf:a97c",
+            "Port": 31337,
+            "PublicMac": [0,48,72,207,169,124]
+        },
+        "fd53:7769:726c:cab1:ec95:ff5c:6bd8:1/112": {
+            "PublicIPv6":"2001:6a8:1d80:2021:230:48ff:fef1:17dc",
+            "Port": 31337,
+            "PublicMac": [0,48,72,241,23,220]
+        },
+        "fd53:7769:726c:d356:47d1:840d:4c38:1/112": {
+            "PublicIPv6":"2001:6a8:1d80:2021:230:48ff:fef1:17d6",
+            "Port": 31337,
+            "PublicMac": [0,48,72,241,23,214]
+        }
+    },
+    "CNIPrefix": "fd53:7769:726c:4522:74c4:3a7d:674f",
+    "Debug": false,
+    "NumServices":1,
+    "TunnelPort": 31337,
+    "TunDev": "fl0",
+    "UseXDP": false,
+    "UseWG": true
+}
